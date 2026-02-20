@@ -20,5 +20,3 @@ A robust RESTful API for a blog platform built with Node.js, Express, and MongoD
 - Multer for file uploads
 - Http Status for proper status handling
 - JOI for validations
-
-Perfect for learning backend development patterns or as a foundation for content management systems.
