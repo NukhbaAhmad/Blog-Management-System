@@ -1,5 +1,6 @@
 const passport = require("passport");
-const { Author } = require("../models");
+const { Strategy: LocalStrategy } = require("passport-local");
+const { Author } = require("../../models");
 
 const strategyOptions = {
   usernameField: "identifier",
