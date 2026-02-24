@@ -16,7 +16,7 @@ A robust RESTful API for a blog platform built with Node.js, Express, and MongoD
 - Node.js
 - Express.js
 - MongoDB with Mongoose
-- JWT Authentication
+- Passport JS (Local Strategy, Local Strategy with sessions, Passport JWT)
 - Multer for file uploads
 - Http Status for proper status handling
 - JOI for validations
