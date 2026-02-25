@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { validate } = require("../../middlewares");
+const { validate, auth } = require("../../middlewares");
 const { authorValidations } = require("../../validations");
 const { authorController } = require("../../controllers");
-
 router
   .route("/")
   .get(validate(authorValidations.getAuthors), authorController.getAuthors)
@@ -14,14 +13,17 @@ router
 router
   .route("/:id")
   .get(
+    auth.isAuthenticated,
     validate(authorValidations.getAuthorById),
     authorController.getAuthorById
   )
   .patch(
+    auth.isAuthenticated,
     validate(authorValidations.updateAuthorById),
     authorController.updateAuthorById
   )
   .delete(
+    auth.isAuthenticated,
     validate(authorValidations.deleteAuthor),
     authorController.deleteAuthor
   );

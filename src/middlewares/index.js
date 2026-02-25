@@ -2,12 +2,12 @@ const rateLimiter = require("./rateLimiter");
 const { errorConverter, errorHandler } = require("./error");
 const validate = require("./validate");
 const sessionConfig = require("./session");
-const authenticateLocal = require("./authenticateLocal");
+const auth = require("./auth");
 module.exports = {
   rateLimiter,
   errorConverter,
   errorHandler,
   validate,
   sessionConfig,
-  authenticateLocal,
+  auth,
 };

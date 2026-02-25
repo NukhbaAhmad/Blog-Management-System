@@ -71,9 +71,5 @@ authorSchema.pre("save", async function (next) {
   }
   next();
 });
-authorSchema.post("save", async function (doc, next) {
-  console.log("Author created with the details:", doc);
-  next();
-});
 const Author = model("Author", authorSchema);
 module.exports = Author;
