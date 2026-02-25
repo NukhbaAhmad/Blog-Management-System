@@ -7,4 +7,15 @@ const loginUser = {
   }),
 };
 
-module.exports = { loginUser };
+/* ? INFO: When you use app.use(cookieParser("my_secret_key"))
+Express automatically moves any cookie that starts with
+s: from req.cookies into req.signedCookies*/
+
+const logoutUser = {
+  signedCookies: Joi.object().keys({
+    session_id: Joi.string().required().messages({
+      "any.required": "User is not currently signed in.",
+    }),
+  }),
+};
+module.exports = { loginUser, logoutUser };

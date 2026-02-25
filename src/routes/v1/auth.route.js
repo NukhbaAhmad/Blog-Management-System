@@ -20,5 +20,10 @@ router.post(
   auth.authenticateLocal(true),
   authController.loginUser
 );
+router.post(
+  "/logout",
+  validate(authValidations.logoutUser),
+  authController.logoutUser
+);
 
 module.exports = router;
