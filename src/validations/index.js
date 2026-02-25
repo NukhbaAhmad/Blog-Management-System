@@ -1,4 +1,4 @@
 const authorValidations = require("./author.validation");
 const customValidations = require("./custom.validations");
-
-module.exports = { authorValidations, customValidations };
+const authValidations = require("./auth.validation");
+module.exports = { authValidations, authorValidations, customValidations };

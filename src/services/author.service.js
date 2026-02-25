@@ -5,10 +5,18 @@ const { ApiError, pick } = require("../utils");
 const createAuthor = async (req) => {
   const body = req.body;
   if (await Author.isEmailTaken(body.email)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Email is already taken.");
+    throw new ApiError({
+      statusCode: httpStatus.BAD_REQUEST,
+      message: "Email is already taken.",
+      isOperational: true,
+    });
   }
   if (await Author.isUsernameTaken(body.username)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Username is already taken.");
+    throw new ApiError({
+      statusCode: httpStatus.BAD_REQUEST,
+      message: "Username is already taken.",
+      isOperational: true,
+    });
   }
   return await Author.create(body);
 };
@@ -21,14 +29,25 @@ const queryAuthors = async (req) => {
 
 const updateAuthorById = async (id, body) => {
   if (!(await Author.doesIdExists(id))) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Author not found.");
+    throw new ApiError({
+      statusCode: httpStatus.NOT_FOUND,
+      message: "Author not found.",
+    });
   }
   const author = await Author.findById(id);
   if (body.email && (await Author.isEmailTaken(body.email, id))) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Email is already taken.");
+    throw new ApiError({
+      statusCode: httpStatus.BAD_REQUEST,
+      message: "Email is already taken.",
+      isOperational: true,
+    });
   }
   if (body.username && (await Author.isUsernameTaken(body.username, id))) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Username is already taken.");
+    throw new ApiError({
+      statusCode: httpStatus.BAD_REQUEST,
+      message: "Username is already taken.",
+      isOperational: true,
+    });
   }
   Object.assign(author, body);
   await author.save();
@@ -37,7 +56,10 @@ const updateAuthorById = async (id, body) => {
 
 const getAuthorById = async (id) => {
   if (!(await Author.doesIdExists(id))) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Author not found.");
+    throw new ApiError({
+      statusCode: httpStatus.NOT_FOUND,
+      message: "Author not found.",
+    });
   }
   return await Author.findById(id);
 };
@@ -45,7 +67,10 @@ const getAuthorById = async (id) => {
 const deleteAuthor = async (req) => {
   const id = req.params.id;
   if (!(await Author.doesIdExists(id))) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Author not found.");
+    throw new ApiError({
+      statusCode: httpStatus.NOT_FOUND,
+      message: "Author not found.",
+    });
   }
   return await Author.findByIdAndDelete(id);
 };

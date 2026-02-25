@@ -1,4 +1,4 @@
-const localStrategy = require("./localStrategy.passport.js");
-const localStrategyWithSessions = require("./localSession.passport.js");
+const localStrategy = require("./localStrategy.auth.js");
+const localStrategyWithSessions = require("./localSession.auth.js");
 
 module.exports = { localStrategy, localStrategyWithSessions };

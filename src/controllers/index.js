@@ -1,3 +1,3 @@
 const authorController = require("./author.controller");
-
-module.exports = { authorController };
+const authController = require("./auth.controller");
+module.exports = { authorController, authController };

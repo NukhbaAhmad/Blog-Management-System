@@ -5,12 +5,13 @@ const { ApiError } = require("../utils");
 const formatMongooseError = (err) => {
   if (err instanceof mongoose.Error.CastError) {
     const fieldName = err.path === "_id" ? "ID" : err.path;
-    return `Invalid ${fieldName} format.`;
+    return `Invalid ${fieldName}.`;
   }
   if (err instanceof mongoose.Error.ValidationError) {
-    return Object.values(err.errors)
-      .map((el) => el.message)
-      .join(", ");
+    return Object.values(err.errors).map((el) => ({
+      field: el.path,
+      message: el.message,
+    }));
   }
 
   return err.message;
@@ -24,19 +25,34 @@ const errorConverter = (err, req, res, next) => {
         : httpStatus.INTERNAL_SERVER_ERROR;
 
     let message = error.message || httpStatus[statusCode];
+    let errors = null;
     if (error instanceof mongoose.Error) {
-      message = formatMongooseError(error);
+      const formatted = formatMongooseError(error);
+      if (formatted.length > 0) {
+        errors = formatted;
+        message = "Validation Error";
+      } else {
+        message = formatted;
+        errors = null;
+      }
+      error = new ApiError({
+        statusCode,
+        message,
+        isOperational: false,
+        stack: err.stack,
+        errors,
+      });
     }
-    error = new ApiError(statusCode, message, false, err.stack);
   }
   next(error);
 };
 const errorHandler = (err, req, res, next) => {
-  const { statusCode, message } = err;
+  const { statusCode, message, errors } = err;
   res.locals.errorMessage = err.message;
   const response = {
-    statusCode,
+    status: statusCode,
     message,
+    ...(errors && { errors }),
     // For production dont include stack
   };
   // For development show consoles.

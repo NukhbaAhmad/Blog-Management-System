@@ -1,3 +1,8 @@
 const { localStrategy, localStrategyWithSessions } = require("./auth");
-
-module.exports = { localStrategy, localStrategyWithSessions };
+const { redisClient, redisHealthCheck } = require("./redis");
+module.exports = {
+  localStrategy,
+  localStrategyWithSessions,
+  redisClient,
+  redisHealthCheck,
+};
