@@ -1,4 +1,5 @@
 const { connectDb, closeDb } = require("./utils");
+const { redisClient } = require("./config");
 const app = require("./app");
 const PORT = 3001;
 
@@ -7,9 +8,9 @@ const connectSevers = () => {
   try {
     connectDb()
       .then(() => {
-        console.log("Connected to db successfull");
+        console.log("✅ DB: Connected");
         server = app.listen(PORT, () => {
-          console.log("Connected to server successfully at port:", PORT);
+          console.log("✅ Server: Connected port:", PORT);
         });
         server.on("error", (err) => {
           console.error("Error connecting to server", err);
@@ -31,6 +32,7 @@ const exitHandler = async (exitCode) => {
     server.close(async () => {
       console.log("Server closed.");
       await closeDb();
+      await redisClient.quit();
       process.exit(exitCode);
     });
   } else {

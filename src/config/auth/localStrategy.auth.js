@@ -1,5 +1,6 @@
 const { Strategy: LocalStrategy } = require("passport-local");
 const { Author } = require("../../models");
+const passport = require("passport");
 
 // IN LOCAL STRATRGY THE --> AFTER REQUEST THE SERVER DONT REMEBER ANYTHING RELATED TO USER, HENCE REJECTING ACCESS TO OTHER APIS
 // Local Strategy must work with the either JWT OR SESSIONS
@@ -20,7 +21,7 @@ const strategy = async (identifier, password, done) => {
         message: "Invalid username or password.",
       });
     }
-    const isMatch = user.password === pasword;
+    const isMatch = user.password === password;
     if (!isMatch) {
       return done(null, false, {
         message: "Invalid username or password.",
@@ -33,4 +34,5 @@ const strategy = async (identifier, password, done) => {
 };
 
 const localStrategy = new LocalStrategy(localStrategyOptions, strategy);
+passport.use("local", localStrategy);
 module.exports = localStrategy;
