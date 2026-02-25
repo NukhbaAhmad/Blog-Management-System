@@ -1,5 +1,6 @@
 const passport = require("passport");
 const { sendResponse } = require("../utils");
+const { ApiError } = require("../utils");
 const { status: httpStatus } = require("http-status");
 
 const authenticateLocal = (session) => (req, res, next) => {
@@ -21,4 +22,17 @@ const authenticateLocal = (session) => (req, res, next) => {
   })(req, res, next);
 };
 
-module.exports = authenticateLocal;
+const isAuthenticated = (req, res, next) => {
+  // Provided automatically by passport js
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  next(
+    new ApiError({
+      statusCode: httpStatus.UNAUTHORIZED,
+      message: "Unauthorized",
+      isOperational: true,
+    })
+  );
+};
+module.exports = { authenticateLocal, isAuthenticated };
