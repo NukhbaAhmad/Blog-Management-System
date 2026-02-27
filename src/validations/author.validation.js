@@ -1,15 +1,5 @@
 const Joi = require("joi");
-const { password, objectId } = require("./custom.validations.js");
-
-const createAuthor = {
-  body: Joi.object().keys({
-    first_name: Joi.string().required(),
-    last_name: Joi.string().required(),
-    email: Joi.string().email().required(),
-    username: Joi.string().required(),
-    password: Joi.string().custom(password).required(),
-  }),
-};
+const { objectId } = require("./custom.validations.js");
 
 const getAuthors = {
   query: Joi.object().keys({
@@ -49,7 +39,6 @@ const deleteAuthor = {
 module.exports = {
   getAuthors,
   getAuthorById,
-  createAuthor,
   deleteAuthor,
   updateAuthorById,
 };

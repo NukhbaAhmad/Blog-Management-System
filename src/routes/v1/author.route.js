@@ -5,11 +5,7 @@ const { authorValidations } = require("../../validations");
 const { authorController } = require("../../controllers");
 router
   .route("/")
-  .get(validate(authorValidations.getAuthors), authorController.getAuthors)
-  .post(
-    validate(authorValidations.createAuthor),
-    authorController.createAuthor
-  );
+  .get(validate(authorValidations.getAuthors), authorController.getAuthors);
 router
   .route("/:id")
   .get(

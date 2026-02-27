@@ -5,7 +5,7 @@ const { RedisStore } = require("connect-redis");
 const sessionConfig = session({
   store: new RedisStore({ client: redisClient, prefix: "sess:" }),
   secret: "my_secret_key",
-  saveUninitialized: false, // Saved only when intialized with data no empty save
+  saveUninitialized: false, // Saved only when intialized with data --> no empty save
   resave: false, // Save only on modification,
   name: "session_id",
   cookie: {

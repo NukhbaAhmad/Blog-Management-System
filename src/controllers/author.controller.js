@@ -7,15 +7,6 @@ const getAuthors = catchAsync(async (req, res) => {
   const authors = await authorService.queryAuthors(req);
   sendResponse(res, httpStatus.OK, { data: authors });
 });
-
-const createAuthor = catchAsync(async (req, res) => {
-  const author = await authorService.createAuthor(req);
-  sendResponse(res, httpStatus.CREATED, {
-    message: "Author Created successfully",
-    data: author,
-  });
-});
-
 const getAuthorById = catchAsync(async (req, res) => {
   const author = await authorService.getAuthorById(req.params.id);
   sendResponse(res, httpStatus.OK, { data: author });
@@ -37,7 +28,6 @@ const deleteAuthor = catchAsync(async (req, res) => {
 
 module.exports = {
   getAuthors,
-  createAuthor,
   deleteAuthor,
   getAuthorById,
   updateAuthorById,
