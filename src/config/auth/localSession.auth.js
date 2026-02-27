@@ -1,5 +1,6 @@
 const passport = require("passport");
 const httpStatus = require("http-status");
+const bcrypt = require("bcrypt");
 const { Strategy: LocalStrategy } = require("passport-local");
 const { Author } = require("../../models");
 const { ApiError } = require("../../utils");
@@ -20,7 +21,7 @@ const strategy = async (identifier, password, done) => {
         isOperational: true,
       });
     }
-    const isMatch = user.password === password;
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return done(null, false, {
         message: "Invalid username or password.",
@@ -35,7 +36,7 @@ const strategy = async (identifier, password, done) => {
 
 // Serialize --> Called once on login --> saves id to redis
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  done(null, user.id || user._id.toString());
 });
 
 // Deserialize --> Called on every request

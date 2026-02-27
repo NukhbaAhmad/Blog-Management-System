@@ -3,6 +3,7 @@ const ApiError = require("./ApiError");
 const catchAsync = require("./catchAsync");
 const pick = require("./pick");
 const sendResponse = require("./response");
+const promisify = require("./promisify");
 module.exports = {
   connectDb,
   closeDb,
@@ -10,4 +11,5 @@ module.exports = {
   pick,
   catchAsync,
   sendResponse,
+  promisify,
 };

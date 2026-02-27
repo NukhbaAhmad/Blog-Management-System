@@ -1,6 +1,7 @@
 const express = require("express");
 const passport = require("passport");
 const routes = require("./routes/v1");
+const cookieParser = require("cookie-parser");
 const {
   errorConverter,
   errorHandler,
@@ -19,6 +20,8 @@ const app = express();
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// Parse cookies for JOI
+app.use(cookieParser("my_secret_key"));
 app.use(sessionConfig);
 
 app.use(passport.initialize());

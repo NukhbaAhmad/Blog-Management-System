@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
+const bcrypt = require("bcrypt");
 const { paginate, toJSON, doesIdExists } = require("./plugins");
 const authorSchema = new Schema(
   {
@@ -66,9 +67,8 @@ authorSchema.statics.isEmailTaken = async function (email, excludeAuthorId) {
 };
 
 authorSchema.pre("save", async function (next) {
-  if (this.isModified("password")) {
-    console.log("Password changed: Hash Password before save.");
-  }
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 8);
   next();
 });
 const Author = model("Author", authorSchema);

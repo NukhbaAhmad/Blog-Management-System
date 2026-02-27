@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { status: httpStatus } = require("http-status");
 const { ApiError } = require("../utils");
+const { errorLabels } = require("../constants");
 
 const formatMongooseError = (err) => {
   if (err instanceof mongoose.Error.CastError) {
@@ -9,7 +10,7 @@ const formatMongooseError = (err) => {
   }
   if (err instanceof mongoose.Error.ValidationError) {
     return Object.values(err.errors).map((el) => ({
-      field: el.path,
+      field: errorLabels.FIELD_LABELS[el.path] || el.path,
       message: el.message,
     }));
   }
@@ -20,9 +21,10 @@ const errorConverter = (err, req, res, next) => {
   let error = err;
   if (!(error instanceof ApiError)) {
     const statusCode =
-      err.statusCode || err instanceof mongoose.Error
+      err.statusCode ||
+      (err instanceof mongoose.Error
         ? httpStatus.BAD_REQUEST
-        : httpStatus.INTERNAL_SERVER_ERROR;
+        : httpStatus.INTERNAL_SERVER_ERROR);
 
     let message = error.message || httpStatus[statusCode];
     let errors = null;
@@ -35,14 +37,14 @@ const errorConverter = (err, req, res, next) => {
         message = formatted;
         errors = null;
       }
-      error = new ApiError({
-        statusCode,
-        message,
-        isOperational: false,
-        stack: err.stack,
-        errors,
-      });
     }
+    error = new ApiError({
+      statusCode,
+      message,
+      isOperational: error.isOperational || false,
+      stack: err.stack,
+      errors,
+    });
   }
   next(error);
 };
@@ -50,7 +52,7 @@ const errorHandler = (err, req, res, next) => {
   const { statusCode, message, errors } = err;
   res.locals.errorMessage = err.message;
   const response = {
-    status: statusCode,
+    status: statusCode || 500,
     message,
     ...(errors && { errors }),
     // For production dont include stack

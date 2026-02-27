@@ -1,9 +1,15 @@
 const Joi = require("joi");
+const { errorLabels } = require("../constants");
 const { status: httpStatus } = require("http-status");
 const { ApiError, pick } = require("../utils");
 
 const validate = (schema) => (req, res, next) => {
-  const validSchema = pick(schema, ["query", "body", "params"]);
+  const validSchema = pick(schema, [
+    "query",
+    "body",
+    "params",
+    "signedCookies",
+  ]);
   const object = pick(req, Object.keys(validSchema));
   const { value, error } = Joi.compile(validSchema).validate(object, {
     errors: { label: "key", wrap: { label: false } },
@@ -11,10 +17,13 @@ const validate = (schema) => (req, res, next) => {
   });
 
   if (error) {
-    const errors = error.details.map((detail) => ({
-      message: detail.message,
-      field: detail.path[detail.path.length - 1],
-    }));
+    const errors = error.details.map((detail) => {
+      const originalField = detail.path[detail.path.length - 1];
+      return {
+        message: detail.message,
+        field: errorLabels.FIELD_LABELS[originalField] || originalField,
+      };
+    });
     const message = "Validation Error";
     const err = new ApiError({
       statusCode: httpStatus.BAD_REQUEST,

@@ -18,7 +18,18 @@ router.post(
   "/login",
   validate(authValidations.loginUser),
   auth.authenticateLocal(true),
-  authController.loginUser
+  authController.login
+);
+router.post(
+  "/logout",
+  validate(authValidations.logoutUser),
+  authController.logout
+);
+router.post(
+  "/register",
+  validate(authValidations.registerUser),
+  authController.register
 );
 
+// ! JWT STRATEGY
 module.exports = router;
